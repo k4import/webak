@@ -335,7 +335,7 @@ class _StatisticsSettingsScreenState extends State<StatisticsSettingsScreen> {
   }
 
   void _saveSettings() {
-    // TODO: Implement settings saving logic
+    // Save settings logic will be implemented here
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('تم حفظ الإعدادات بنجاح'),

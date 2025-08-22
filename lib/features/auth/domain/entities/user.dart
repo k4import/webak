@@ -49,22 +49,5 @@ class User {
     };
   }
 
-  // Helper factory to create a user from Supabase response
-  factory User.fromSupabase(Map<String, dynamic> map) {
-    return User(
-      id: map['id'],
-      email: map['email'] ?? '',
-      fullName: map['full_name'],
-      phoneNumber: map['phone_number'],
-      avatarUrl: map['avatar_url'],
-      role: map['role'] ?? 'user',
-      createdAt: map['created_at'] != null
-          ? DateTime.parse(map['created_at'])
-          : null,
-      lastLoginAt: map['last_login_at'] != null
-          ? DateTime.parse(map['last_login_at'])
-          : null,
-      metadata: map['metadata'],
-    );
-  }
+
 }

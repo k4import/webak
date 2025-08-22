@@ -59,7 +59,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               IconButton(
                 icon: const Icon(Icons.search),
                 onPressed: () {
-                  // TODO: Show search dialog
+                  // Search functionality will be implemented here
                 },
               ),
             ],

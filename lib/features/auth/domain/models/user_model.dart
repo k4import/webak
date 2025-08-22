@@ -38,41 +38,5 @@ class UserModel {
     );
   }
 
-  // Helper factory to create a user from Supabase auth response
-  factory UserModel.fromSupabase(Map<String, dynamic> map) {
-    return UserModel(
-      id: map['id'],
-      email: map['email'] ?? '',
-      username: map['username'] ?? map['user_name'],
-      fullName: map['full_name'] ?? map['user_metadata']?['full_name'],
-      avatarUrl: map['avatar_url'] ?? map['user_metadata']?['avatar_url'],
-      lastSignInAt: map['last_sign_in_at'] != null
-          ? DateTime.parse(map['last_sign_in_at'])
-          : null,
-      createdAt: map['created_at'] != null
-          ? DateTime.parse(map['created_at'])
-          : null,
-      updatedAt: map['updated_at'] != null
-          ? DateTime.parse(map['updated_at'])
-          : null,
-      role: map['role'] ?? map['user_metadata']?['role'],
-      metadata: map['user_metadata'] ?? map['metadata'],
-    );
-  }
 
-  // Helper method to convert to Supabase format
-  Map<String, dynamic> toSupabase() {
-    return {
-      'id': id,
-      'email': email,
-      if (username != null) 'username': username,
-      if (fullName != null) 'full_name': fullName,
-      if (avatarUrl != null) 'avatar_url': avatarUrl,
-      if (lastSignInAt != null) 'last_sign_in_at': lastSignInAt!.toIso8601String(),
-      if (createdAt != null) 'created_at': createdAt!.toIso8601String(),
-      if (updatedAt != null) 'updated_at': updatedAt!.toIso8601String(),
-      if (role != null) 'role': role,
-      if (metadata != null) 'user_metadata': metadata,
-    };
-  }
 }

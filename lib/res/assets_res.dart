@@ -8,5 +8,5 @@ class AssetsRes {
 
   static const String PROJECT_NAME = 'webak';
   static const String PROJECT_VERSION = '1.0.0+1';
-  static const String = 'assets/.env';
+  static const String ENV_FILE = 'assets/.env';
 }
