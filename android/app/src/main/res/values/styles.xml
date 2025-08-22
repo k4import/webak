@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Theme applied to the Android Window while the process is starting when the OS's Dark Mode setting is off -->
+    <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
+        <!-- Show a splash screen on the activity. Automatically removed when
+             the Flutter engine draws its first frame -->
+        <item name="android:windowBackground">@drawable/launch_background</item>
+        <!-- Disable hardware acceleration during launch to reduce GPU usage -->
+        <item name="android:hardwareAccelerated">false</item>
+        <!-- Reduce animation scale -->
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+    <!-- Theme applied to the Android Window as soon as the process has started.
+         This theme determines the color of the Android Window while your
+         Flutter UI initializes, as well as behind your Flutter UI while its
+         running.
+
+         This Theme is only used starting with V2 of Flutter's Android embedding. -->
+    <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
+        <item name="android:windowBackground">?android:colorBackground</item>
+        <!-- Disable hardware acceleration to reduce GPU usage and gralloc4 messages -->
+        <item name="android:hardwareAccelerated">false</item>
+        <!-- Reduce animation scale -->
+        <item name="android:windowAnimationStyle">@null</item>
+        <!-- Disable transitions to reduce GPU load -->
+        <item name="android:windowEnterAnimation">@null</item>
+        <item name="android:windowExitAnimation">@null</item>
+    </style>
+</resources>

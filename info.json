@@ -1,0 +1,84 @@
+{
+  "project": {
+    "name": "supabase_flutter_app",
+    "description": "A clean architecture Flutter app using Supabase backend with reusable UI components and design tokens.",
+    "platforms": ["android", "ios", "web", "desktop"],
+    "architecture": "Clean Code + OOP + SOLID + Feature-based structure"
+  },
+  "dependencies": {
+    "flutter": ">=3.22.0 <4.0.0",
+    "supabase_flutter": "^2.0.0",
+    "flutter_bloc": "^8.1.0",
+    "equatable": "^2.0.5",
+    "get_it": "^7.6.0",
+    "freezed": "^2.3.0",
+    "json_serializable": "^6.6.0"
+  },
+  "structure": {
+    "core": {
+      "di": "Dependency injection setup with GetIt",
+      "error": "App-wide failure & exceptions",
+      "network": "Supabase client setup",
+      "theme": "Theme, Tokens, Colors, Typography"
+    },
+    "features": {
+      "auth": {
+        "data": ["models", "repositories_impl"],
+        "domain": ["entities", "repositories", "usecases"],
+        "presentation": ["bloc", "screens", "widgets"]
+      },
+      "profile": {
+        "data": ["models", "repositories_impl"],
+        "domain": ["entities", "repositories", "usecases"],
+        "presentation": ["bloc", "screens", "widgets"]
+      }
+    },
+    "shared": {
+      "widgets": "Reusable UI components (buttons, inputs, cards)",
+      "utils": "Helper methods"
+    }
+  },
+  "ui_tokens": {
+    "colors": {
+      "primary": "#3B82F6",
+      "primary_dark": "#1E40AF",
+      "secondary": "#F59E0B",
+      "background": "#F9FAFB",
+      "surface": "#FFFFFF",
+      "error": "#EF4444",
+      "success": "#22C55E",
+      "text_primary": "#111827",
+      "text_secondary": "#6B7280",
+      "border": "#E5E7EB"
+    },
+    "spacing": {
+      "xxs": 4,
+      "xs": 8,
+      "sm": 12,
+      "md": 16,
+      "lg": 24,
+      "xl": 32,
+      "xxl": 40
+    },
+    "typography": {
+      "h1": {"fontSize": 32, "fontWeight": "bold", "letterSpacing": 0.5},
+      "h2": {"fontSize": 24, "fontWeight": "bold", "letterSpacing": 0.25},
+      "h3": {"fontSize": 20, "fontWeight": "semi-bold"},
+      "body1": {"fontSize": 16, "fontWeight": "normal"},
+      "body2": {"fontSize": 14, "fontWeight": "normal"},
+      "caption": {"fontSize": 12, "fontWeight": "normal"}
+    },
+    "icons": {
+      "home": "Icons.home",
+      "profile": "Icons.person",
+      "settings": "Icons.settings",
+      "logout": "Icons.logout"
+    }
+  },
+  "guidelines": {
+    "reusability": "All UI widgets must be reusable with customizable parameters.",
+    "state_management": "Each feature uses Bloc/Cubit with clear separation of states.",
+    "clean_code": "Follow Uncle Bob’s Clean Architecture principles with layers: Data, Domain, Presentation.",
+    "theme_usage": "All colors, typography, and spacing come only from ui_tokens."
+  }
+}

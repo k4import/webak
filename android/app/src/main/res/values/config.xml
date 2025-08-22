@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- تقليل رسائل النظام -->
+    <bool name="config_enableSystemLogging">false</bool>
+    <bool name="config_enableGrallocLogging">false</bool>
+    <bool name="config_enableGpuLogging">false</bool>
+    
+    <!-- تحسين الأداء -->
+    <bool name="config_enableHardwareAcceleration">false</bool>
+    <bool name="config_enableGpuDebug">false</bool>
+    <bool name="config_enableVulkanDebug">false</bool>
+    
+    <!-- تقليل استخدام الذاكرة -->
+    <integer name="config_maxTextureSize">512</integer>
+    <integer name="config_maxBufferSize">1024</integer>
+    
+    <!-- إعدادات الرسوميات -->
+    <string name="config_gpuDriverMode">software</string>
+    <string name="config_renderingMode">cpu</string>
+</resources>
