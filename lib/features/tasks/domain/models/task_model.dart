@@ -265,4 +265,65 @@ class TaskModel {
       isImportant: isImportant ?? this.isImportant,
     );
   }
+
+  /// Convert TaskModel to Map for database operations
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'description': description,
+      'status': status,
+      'priority': priority,
+      'location': location,
+      'start_time': startTime?.toIso8601String(),
+      'end_time': endTime?.toIso8601String(),
+      'due_date': dueDate?.toIso8601String(),
+      'created_at': createdAt?.toIso8601String(),
+      'updated_at': updatedAt?.toIso8601String(),
+      'user_id': userId,
+      'assigned_to': assignedTo,
+      'tags': tags?.join(','),
+      'metadata': metadata?.toString(),
+      'form_data': formData?.toString(),
+      'is_urgent': isUrgent ? 1 : 0,
+      'is_important': isImportant ? 1 : 0,
+    };
+  }
+
+  /// Create TaskModel from Map (database)
+  static TaskModel fromMap(Map<String, dynamic> map) {
+    return TaskModel(
+      id: map['id'] as String?,
+      title: map['title'] as String? ?? '',
+      description: map['description'] as String? ?? '',
+      status: map['status'] as String? ?? 'pending',
+      priority: map['priority'] as String? ?? 'medium',
+      location: map['location'] as String?,
+      startTime: map['start_time'] != null ? DateTime.tryParse(map['start_time'] as String) : null,
+      endTime: map['end_time'] != null ? DateTime.tryParse(map['end_time'] as String) : null,
+      dueDate: map['due_date'] != null ? DateTime.tryParse(map['due_date'] as String) : null,
+      createdAt: map['created_at'] != null ? DateTime.tryParse(map['created_at'] as String) : null,
+      updatedAt: map['updated_at'] != null ? DateTime.tryParse(map['updated_at'] as String) : null,
+      userId: map['user_id'] as String?,
+      assignedTo: map['assigned_to'] as String?,
+      tags: map['tags'] != null ? (map['tags'] as String).split(',').where((tag) => tag.isNotEmpty).toList() : null,
+      metadata: map['metadata'] != null ? {'raw': map['metadata']} : null,
+      formData: map['form_data'] != null ? {'raw': map['form_data']} : null,
+      isUrgent: (map['is_urgent'] as int? ?? 0) == 1,
+      isImportant: (map['is_important'] as int? ?? 0) == 1,
+    );
+  }
+
+  /// Create empty TaskModel
+  static TaskModel empty() {
+    return TaskModel(
+      id: '',
+      title: '',
+      description: '',
+      status: 'pending',
+      priority: 'medium',
+      isUrgent: false,
+      isImportant: false,
+    );
+  }
 }

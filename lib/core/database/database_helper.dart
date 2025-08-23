@@ -96,6 +96,21 @@ class DatabaseHelper {
       )
     ''');
     
+    // Create indexes for better query performance O(log n)
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_tasks_status ON tasks(status)');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_tasks_priority ON tasks(priority)');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_tasks_user_id ON tasks(user_id)');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_tasks_assigned_to ON tasks(assigned_to)');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_tasks_due_date ON tasks(due_date)');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_tasks_created_at ON tasks(created_at)');
+    
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_reports_type ON reports(type)');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_reports_user_id ON reports(user_id)');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_reports_start_date ON reports(start_date)');
+    
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_users_role ON users(role)');
+    
     // Insert default admin user
     await db.insert('users', {
       'id': const Uuid().v4(),
@@ -295,6 +310,115 @@ class DatabaseHelper {
     return str.split(',');
   }
 
+  // Advanced search with multiple filters - O(log n) with indexes
+  Future<List<TaskModel>> searchTasks({
+    String? query,
+    String? status,
+    String? priority,
+    String? assignedTo,
+    DateTime? startDate,
+    DateTime? endDate,
+    List<String>? tags,
+    int limit = 50,
+    int offset = 0,
+  }) async {
+    final db = await database;
+    
+    // Build dynamic WHERE clause for efficient querying
+    List<String> whereConditions = [];
+    List<dynamic> whereArgs = [];
+    
+    if (query != null && query.isNotEmpty) {
+      whereConditions.add('(title LIKE ? OR description LIKE ?)');
+      whereArgs.addAll(['%$query%', '%$query%']);
+    }
+    
+    if (status != null) {
+      whereConditions.add('status = ?');
+      whereArgs.add(status);
+    }
+    
+    if (priority != null) {
+      whereConditions.add('priority = ?');
+      whereArgs.add(priority);
+    }
+    
+    if (assignedTo != null) {
+      whereConditions.add('assigned_to = ?');
+      whereArgs.add(assignedTo);
+    }
+    
+    if (startDate != null) {
+      whereConditions.add('due_date >= ?');
+      whereArgs.add(startDate.toIso8601String());
+    }
+    
+    if (endDate != null) {
+      whereConditions.add('due_date <= ?');
+      whereArgs.add(endDate.toIso8601String());
+    }
+    
+    if (tags != null && tags.isNotEmpty) {
+      for (String tag in tags) {
+        whereConditions.add('tags LIKE ?');
+        whereArgs.add('%$tag%');
+      }
+    }
+    
+    String whereClause = whereConditions.isNotEmpty 
+        ? whereConditions.join(' AND ') 
+        : '1=1';
+    
+    final List<Map<String, dynamic>> maps = await db.query(
+      'tasks',
+      where: whereClause,
+      whereArgs: whereArgs,
+      orderBy: 'created_at DESC, priority DESC',
+      limit: limit,
+      offset: offset,
+    );
+    
+    return List.generate(maps.length, (i) => _mapToTaskModel(maps[i]));
+  }
+  
+  // Get tasks count for pagination
+  Future<int> getTasksCount({
+    String? status,
+    String? priority,
+    String? assignedTo,
+  }) async {
+    final db = await database;
+    
+    List<String> whereConditions = [];
+    List<dynamic> whereArgs = [];
+    
+    if (status != null) {
+      whereConditions.add('status = ?');
+      whereArgs.add(status);
+    }
+    
+    if (priority != null) {
+      whereConditions.add('priority = ?');
+      whereArgs.add(priority);
+    }
+    
+    if (assignedTo != null) {
+      whereConditions.add('assigned_to = ?');
+      whereArgs.add(assignedTo);
+    }
+    
+    String whereClause = whereConditions.isNotEmpty 
+        ? whereConditions.join(' AND ') 
+        : '1=1';
+    
+    final result = await db.rawQuery(
+      'SELECT COUNT(*) as count FROM tasks WHERE $whereClause',
+      whereArgs,
+    );
+    
+    return result.first['count'] as int;
+  }
+
   // Helper method to parse Map from String for retrieval
   Map<String, dynamic>? _stringToMap(String? str) {
     if (str == null || str.isEmpty) return null;
@@ -446,14 +570,16 @@ class DatabaseHelper {
     return List.generate(maps.length, (i) => _mapToTaskModel(maps[i]));
   }
 
-  // Get tasks by user ID
-  Future<List<TaskModel>> getTasksByUserId(String userId) async {
+  // Get tasks by user ID with pagination for better performance O(log n)
+  Future<List<TaskModel>> getTasksByUserId(String userId, {int limit = 50, int offset = 0}) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
       'tasks',
       where: 'user_id = ?',
       whereArgs: [userId],
       orderBy: 'created_at DESC',
+      limit: limit,
+      offset: offset,
     );
     return List.generate(maps.length, (i) => _mapToTaskModel(maps[i]));
   }
