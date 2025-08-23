@@ -34,7 +34,7 @@ class AppLoader extends StatelessWidget {
 
     if (overlay) {
       return Container(
-        color: Colors.black.withOpacity(0.5),
+        color: Colors.black.withValues(alpha: 0.5),
         child: loader,
       );
     }

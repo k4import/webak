@@ -25,7 +25,7 @@ class EmptyTaskList extends StatelessWidget {
             Icon(
               Icons.task_alt,
               size: 80,
-              color: AppTheme.primary.withOpacity(0.5),
+              color: AppTheme.primary.withValues(alpha: 0.5),
             ),
             const SizedBox(height: AppTheme.md),
             Text(

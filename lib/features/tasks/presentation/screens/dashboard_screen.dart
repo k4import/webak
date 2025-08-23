@@ -271,8 +271,8 @@ class _TasksTabState extends State<TasksTab> with SingleTickerProviderStateMixin
                             CurvedAnimation(
                               parent: _animationController,
                               curve: Interval(
-                                index / (tasks.length > 0 ? tasks.length : 1) * 0.5,
-                                (index + 1) / (tasks.length > 0 ? tasks.length : 1) * 0.5 + 0.5,
+                                index / (tasks.isNotEmpty ? tasks.length : 1) * 0.5,
+                                (index + 1) / (tasks.isNotEmpty ? tasks.length : 1) * 0.5 + 0.5,
                                 curve: Curves.easeOut,
                               ),
                             ),
@@ -308,8 +308,8 @@ class _TasksTabState extends State<TasksTab> with SingleTickerProviderStateMixin
                             CurvedAnimation(
                               parent: _animationController,
                               curve: Interval(
-                                index / (tasks.length > 0 ? tasks.length : 1) * 0.5,
-                                (index + 1) / (tasks.length > 0 ? tasks.length : 1) * 0.5 + 0.5,
+                                index / (tasks.isNotEmpty ? tasks.length : 1) * 0.5,
+                                (index + 1) / (tasks.isNotEmpty ? tasks.length : 1) * 0.5 + 0.5,
                                 curve: Curves.easeOut,
                               ),
                             ),

@@ -272,9 +272,9 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
         'حذف المهمة',
         'هل أنت متأكد من حذف هذه المهمة؟',
       );
-      if (confirmed) {
+      if (confirmed && mounted) {
         context.read<TaskCubit>().deleteTask(widget.task!.id!);
-        Navigator.of(context).pop();
+        if (mounted) Navigator.of(context).pop();
       }
     }
   }

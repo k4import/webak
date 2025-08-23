@@ -80,7 +80,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     final user = authState.user;
                     _usernameController.text = user.username ?? '';
                     _fullNameController.text = user.fullName ?? '';
-                    _emailController.text = user.email ?? '';
+                    _emailController.text = user.email;
                     _phoneController.text = user.metadata?['phone'] ?? '';
                   }
                 });

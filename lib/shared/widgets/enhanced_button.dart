@@ -260,7 +260,7 @@ class _EnhancedButtonState extends State<EnhancedButton>
             boxShadow: [
               BoxShadow(
                 color: (widget.backgroundColor ?? AppColors.primaryGreen)
-                    .withOpacity(0.3),
+                    .withValues(alpha: 0.3),
                 blurRadius: AppTheme.elevationLow,
                 offset: const Offset(0, 2),
               ),
@@ -276,7 +276,7 @@ class _EnhancedButtonState extends State<EnhancedButton>
             boxShadow: [
               BoxShadow(
                 color: (widget.backgroundColor ?? AppColors.primaryOrange)
-                    .withOpacity(0.3),
+                    .withValues(alpha: 0.3),
                 blurRadius: AppTheme.elevationLow,
                 offset: const Offset(0, 2),
               ),

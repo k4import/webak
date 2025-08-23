@@ -39,7 +39,7 @@ class AppPriorityBadge extends StatelessWidget {
     return Container(
       padding: padding,
       decoration: BoxDecoration(
-        color: color.withOpacity(0.2),
+        color: color.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(AppTheme.xs),
         border: Border.all(color: color),
       ),

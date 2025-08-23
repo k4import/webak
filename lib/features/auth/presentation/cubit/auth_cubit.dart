@@ -90,7 +90,7 @@ class AuthCubit extends Cubit<AuthState> {
       if (user != null) {
         // حفظ بيانات المستخدم في الـ cache
          await CacheHelper.saveUserLogin(
-           userId: user.id!,
+           userId: user.id,
            email: user.email,
            role: user.role ?? 'employee',
            userData: {
@@ -121,7 +121,7 @@ class AuthCubit extends Cubit<AuthState> {
       
       // حفظ بيانات المستخدم في الـ cache
        await CacheHelper.saveUserLogin(
-         userId: user.id!,
+         userId: user.id,
          email: user.email,
          role: user.role ?? 'employee',
          userData: {

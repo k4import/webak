@@ -122,7 +122,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   child: Container(
                     padding: const EdgeInsets.all(AppTheme.xl),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(AppTheme.borderRadiusLarge),
                     ),
                     child: const Icon(
@@ -154,7 +154,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   child: Text(
                     'إدارة مهام مكافحة الآفات والتحديات البيئية',
                     style: AppTheme.body1.copyWith(
-                      color: Colors.white.withOpacity(0.9),
+                      color: Colors.white.withValues(alpha: 0.9),
                       fontSize: 16,
                     ),
                     textAlign: TextAlign.center,
@@ -168,7 +168,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   child: Container(
                     padding: const EdgeInsets.all(AppTheme.lg),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(AppTheme.borderRadius),
                     ),
                     child: const CircularProgressIndicator(
