@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:webak/core/theme/app_colors.dart';
 import 'package:webak/core/theme/app_icons.dart';
-import 'package:webak/core/theme/app_animations.dart';
 import 'package:webak/features/tasks/domain/enums/task_priorities.dart';
 
 class AppUtils {

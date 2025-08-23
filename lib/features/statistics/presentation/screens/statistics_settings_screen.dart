@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:webak/core/theme/app_theme.dart';
-import 'package:webak/shared/widgets/widgets.dart';
 
 class StatisticsSettingsScreen extends StatefulWidget {
   const StatisticsSettingsScreen({super.key});

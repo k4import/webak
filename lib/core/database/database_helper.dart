@@ -6,7 +6,6 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 import 'package:webak/features/tasks/domain/models/task_model.dart';
 import 'package:uuid/uuid.dart';
-import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class DatabaseHelper {
@@ -294,12 +293,6 @@ class DatabaseHelper {
   List<String>? _stringToList(String? str) {
     if (str == null || str.isEmpty) return null;
     return str.split(',');
-  }
-
-  // Helper method to convert Map to String for storage
-  String? _mapToString(Map<String, dynamic>? map) {
-    if (map == null) return null;
-    return map.toString();
   }
 
   // Helper method to parse Map from String for retrieval

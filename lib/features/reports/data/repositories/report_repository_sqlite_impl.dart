@@ -42,7 +42,6 @@ class ReportRepositorySQLiteImpl implements ReportRepository {
     await _reportService.deleteReport(id);
   }
 
-  @override
   Future<List<ReportModel>> getReportsByStatus(String status) async {
     final userId = DatabaseConfig.instance.currentUserId;
     if (userId == null) return [];
@@ -50,7 +49,6 @@ class ReportRepositorySQLiteImpl implements ReportRepository {
     return _reportService.getReportsByStatus(status, userId);
   }
 
-  @override
   Future<List<ReportModel>> getReportsByType(String type) async {
     final userId = DatabaseConfig.instance.currentUserId;
     if (userId == null) return [];
