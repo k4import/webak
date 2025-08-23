@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:webak/core/constants/app_constants.dart';
 import 'package:webak/core/theme/app_theme.dart';
 import 'package:webak/core/utils/app_utils.dart';
 import 'package:webak/features/tasks/domain/enums/task_priorities.dart';
@@ -76,8 +75,6 @@ class AppPriorityBadge extends StatelessWidget {
         return Icons.remove;
       case TaskPriorities.low:
         return Icons.arrow_downward;
-      default:
-        return Icons.help_outline;
     }
   }
 }

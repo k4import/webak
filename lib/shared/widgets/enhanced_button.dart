@@ -105,7 +105,7 @@ class EnhancedButton extends StatefulWidget {
 }
 
 class _EnhancedButtonState extends State<EnhancedButton>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
   bool _isPressed = false;
@@ -251,8 +251,6 @@ class _EnhancedButtonState extends State<EnhancedButton>
   }
 
   _ButtonStyle _getButtonStyle(ThemeData theme) {
-    final isDark = theme.brightness == Brightness.dark;
-    
     switch (widget.type) {
       case EnhancedButtonType.primary:
         return _ButtonStyle(

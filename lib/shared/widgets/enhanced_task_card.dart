@@ -16,7 +16,7 @@ class EnhancedTaskCard extends StatelessWidget {
   final bool showActions;
   final int? animationIndex;
 
-  EnhancedTaskCard({
+  const EnhancedTaskCard({
     super.key,
     required this.task,
     this.onTap,
