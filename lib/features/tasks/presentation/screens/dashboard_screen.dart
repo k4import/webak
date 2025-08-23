@@ -59,7 +59,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               IconButton(
                 icon: const Icon(Icons.search),
                 onPressed: () {
-                  // Search functionality will be implemented here
+                  _showAdvancedSearchDialog();
                 },
               ),
             ],
@@ -89,6 +89,371 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         );
       },
+    );
+  }
+
+  /// Show advanced search dialog with real-time suggestions
+  void _showAdvancedSearchDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AdvancedSearchDialog(
+        onSearch: (query, filters) {
+          context.read<TaskCubit>().searchTasks(
+            query: query.isNotEmpty ? query : null,
+            status: filters['status'],
+            priority: filters['priority'],
+            assignedTo: filters['assignedTo'],
+            startDate: filters['startDate'],
+            endDate: filters['endDate'],
+            tags: filters['tags'],
+          );
+        },
+        onSuggestionSelected: (suggestion) {
+          context.read<TaskCubit>().searchTasks(query: suggestion);
+        },
+      ),
+    );
+  }
+}
+
+/// Advanced Search Dialog with real-time suggestions and filters
+class AdvancedSearchDialog extends StatefulWidget {
+  final Function(String query, Map<String, dynamic> filters) onSearch;
+  final Function(String suggestion) onSuggestionSelected;
+
+  const AdvancedSearchDialog({
+    super.key,
+    required this.onSearch,
+    required this.onSuggestionSelected,
+  });
+
+  @override
+  State<AdvancedSearchDialog> createState() => _AdvancedSearchDialogState();
+}
+
+class _AdvancedSearchDialogState extends State<AdvancedSearchDialog> {
+  final TextEditingController _searchController = TextEditingController();
+  final TextEditingController _assignedToController = TextEditingController();
+  
+  String? _selectedStatus;
+  String? _selectedPriority;
+  DateTime? _startDate;
+  DateTime? _endDate;
+  List<String> _selectedTags = [];
+  List<String> _suggestions = [];
+  bool _showSuggestions = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  void _onSearchChanged() {
+    final query = _searchController.text;
+    if (query.length >= 2) {
+      context.read<TaskCubit>().getSearchSuggestions(query);
+      setState(() {
+        _showSuggestions = true;
+      });
+    } else {
+      setState(() {
+        _showSuggestions = false;
+        _suggestions = [];
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _assignedToController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppTheme.borderRadius),
+      ),
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.9,
+        height: MediaQuery.of(context).size.height * 0.8,
+        padding: const EdgeInsets.all(AppTheme.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'البحث المتقدم',
+                  style: AppTheme.h2.copyWith(
+                    color: AppTheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppTheme.md),
+            
+            // Search Field with Suggestions
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Search Input
+                    AppTextField(
+                      controller: _searchController,
+                      label: 'البحث في المهام',
+                      prefixIcon: const Icon(Icons.search),
+                      suffix: _searchController.text.isNotEmpty
+                          ? IconButton(
+                              icon: const Icon(Icons.clear),
+                              onPressed: () {
+                                _searchController.clear();
+                                setState(() {
+                                  _showSuggestions = false;
+                                  _suggestions = [];
+                                });
+                              },
+                            )
+                          : null,
+                    ),
+                    
+                    // Suggestions List
+                    BlocListener<TaskCubit, TaskState>(
+                      listener: (context, state) {
+                        if (state is TaskSuggestions) {
+                          setState(() {
+                            _suggestions = state.suggestions;
+                          });
+                        }
+                      },
+                      child: _showSuggestions && _suggestions.isNotEmpty
+                          ? Container(
+                              margin: const EdgeInsets.only(top: AppTheme.xs),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey.shade300),
+                                borderRadius: BorderRadius.circular(AppTheme.borderRadius),
+                              ),
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: _suggestions.length,
+                                itemBuilder: (context, index) {
+                                  final suggestion = _suggestions[index];
+                                  return ListTile(
+                                    dense: true,
+                                    leading: const Icon(Icons.search, size: 16),
+                                    title: Text(
+                                      suggestion,
+                                      style: AppTheme.body2,
+                                    ),
+                                    onTap: () {
+                                      _searchController.text = suggestion;
+                                      setState(() {
+                                        _showSuggestions = false;
+                                      });
+                                      widget.onSuggestionSelected(suggestion);
+                                      Navigator.of(context).pop();
+                                    },
+                                  );
+                                },
+                              ),
+                            )
+                          : const SizedBox.shrink(),
+                    ),
+                    
+                    const SizedBox(height: AppTheme.lg),
+                    
+                    // Filters Section
+                    Text(
+                      'الفلاتر',
+                      style: AppTheme.h3.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: AppTheme.md),
+                    
+                    // Status Filter
+                    DropdownButtonFormField<String>(
+                      value: _selectedStatus,
+                      decoration: const InputDecoration(
+                        labelText: 'الحالة',
+                        border: OutlineInputBorder(),
+                      ),
+                      items: const [
+                        DropdownMenuItem(value: null, child: Text('الكل')),
+                        DropdownMenuItem(value: 'pending', child: Text('قيد الانتظار')),
+                        DropdownMenuItem(value: 'in_progress', child: Text('قيد التنفيذ')),
+                        DropdownMenuItem(value: 'completed', child: Text('مكتملة')),
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedStatus = value;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: AppTheme.md),
+                    
+                    // Priority Filter
+                    DropdownButtonFormField<String>(
+                      value: _selectedPriority,
+                      decoration: const InputDecoration(
+                        labelText: 'الأولوية',
+                        border: OutlineInputBorder(),
+                      ),
+                      items: const [
+                        DropdownMenuItem(value: null, child: Text('الكل')),
+                        DropdownMenuItem(value: 'low', child: Text('منخفضة')),
+                        DropdownMenuItem(value: 'medium', child: Text('متوسطة')),
+                        DropdownMenuItem(value: 'high', child: Text('عالية')),
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedPriority = value;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: AppTheme.md),
+                    
+                    // Assigned To Filter
+                    AppTextField(
+                      controller: _assignedToController,
+                      label: 'مُكلف إلى',
+                      prefixIcon: const Icon(Icons.person),
+                    ),
+                    const SizedBox(height: AppTheme.md),
+                    
+                    // Date Range
+                    Row(
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            onTap: () async {
+                              final date = await showDatePicker(
+                                context: context,
+                                initialDate: _startDate ?? DateTime.now(),
+                                firstDate: DateTime(2020),
+                                lastDate: DateTime(2030),
+                              );
+                              if (date != null) {
+                                setState(() {
+                                  _startDate = date;
+                                });
+                              }
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(AppTheme.md),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey.shade300),
+                                borderRadius: BorderRadius.circular(AppTheme.borderRadius),
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.calendar_today),
+                                  const SizedBox(width: AppTheme.sm),
+                                  Text(
+                                    _startDate != null
+                                        ? 'من: ${AppUtils.formatDate(_startDate!)}'
+                                        : 'تاريخ البداية',
+                                    style: AppTheme.body2,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: AppTheme.sm),
+                        Expanded(
+                          child: InkWell(
+                            onTap: () async {
+                              final date = await showDatePicker(
+                                context: context,
+                                initialDate: _endDate ?? DateTime.now(),
+                                firstDate: DateTime(2020),
+                                lastDate: DateTime(2030),
+                              );
+                              if (date != null) {
+                                setState(() {
+                                  _endDate = date;
+                                });
+                              }
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(AppTheme.md),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey.shade300),
+                                borderRadius: BorderRadius.circular(AppTheme.borderRadius),
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.calendar_today),
+                                  const SizedBox(width: AppTheme.sm),
+                                  Text(
+                                    _endDate != null
+                                        ? 'إلى: ${AppUtils.formatDate(_endDate!)}'
+                                        : 'تاريخ النهاية',
+                                    style: AppTheme.body2,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            
+            // Action Buttons
+            const SizedBox(height: AppTheme.lg),
+            Row(
+              children: [
+                Expanded(
+                  child: AppButton(
+                    text: 'إلغاء',
+                    type: ButtonType.secondary,
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ),
+                const SizedBox(width: AppTheme.md),
+                Expanded(
+                  child: AppButton(
+                    text: 'بحث',
+                    type: ButtonType.primary,
+                    onPressed: () {
+                      final filters = <String, dynamic>{
+                        'status': _selectedStatus,
+                        'priority': _selectedPriority,
+                        'assignedTo': _assignedToController.text.isNotEmpty
+                            ? _assignedToController.text
+                            : null,
+                        'startDate': _startDate,
+                        'endDate': _endDate,
+                        'tags': _selectedTags,
+                      };
+                      
+                      widget.onSearch(_searchController.text, filters);
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

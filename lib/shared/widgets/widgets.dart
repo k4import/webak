@@ -12,3 +12,4 @@ export 'empty_task_list.dart';
 // Enhanced widgets with modern design
 export 'enhanced_task_card.dart';
 export 'enhanced_button.dart';
+export 'paginated_list_view.dart';
