@@ -156,7 +156,7 @@ class AdvancedSearchEngine {
     if (text.isEmpty) return;
     
     // Split by common delimiters and index each word
-    List<String> words = text.split(RegExp(r'[\s,،.؛;:!?()\[\]{}"\'\-]+'));
+    List<String> words = text.split(RegExp(r'[\s,،.؛;:!?()\[\]{}"\-]+'));
     
     for (String word in words) {
       word = word.trim();
@@ -294,7 +294,7 @@ class AdvancedSearchEngine {
   void _removeWords(String text, String taskId, SearchTrie trie) {
     if (text.isEmpty) return;
     
-    List<String> words = text.split(RegExp(r'[\s,،.؛;:!?()\[\]{}"\'\-]+'));
+    List<String> words = text.split(RegExp(r'[\s,،.؛;:!?()\[\]{}"\-]+'));
     
     for (String word in words) {
       word = word.trim();

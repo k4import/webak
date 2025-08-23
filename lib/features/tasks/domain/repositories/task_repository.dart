@@ -30,4 +30,24 @@ abstract class TaskRepository {
 
   /// Stream of tasks for real-time updates
   Stream<List<TaskModel>> tasksStream();
+
+  /// Advanced search with multiple filters and pagination
+  Future<List<TaskModel>> searchTasks({
+    String? query,
+    String? status,
+    String? priority,
+    String? assignedTo,
+    DateTime? startDate,
+    DateTime? endDate,
+    List<String>? tags,
+    int limit = 50,
+    int offset = 0,
+  });
+
+  /// Get tasks count for pagination
+  Future<int> getTasksCount({
+    String? status,
+    String? priority,
+    String? assignedTo,
+  });
 }

@@ -213,7 +213,7 @@ class _AdvancedSearchDialogState extends State<AdvancedSearchDialog> {
                     AppTextField(
                       controller: _searchController,
                       label: 'البحث في المهام',
-                      prefixIcon: const Icon(Icons.search),
+                      prefixIcon: Icons.search,
                       suffix: _searchController.text.isNotEmpty
                           ? IconButton(
                               icon: const Icon(Icons.clear),
@@ -329,7 +329,7 @@ class _AdvancedSearchDialogState extends State<AdvancedSearchDialog> {
                     AppTextField(
                       controller: _assignedToController,
                       label: 'مُكلف إلى',
-                      prefixIcon: const Icon(Icons.person),
+                      prefixIcon: Icons.person,
                     ),
                     const SizedBox(height: AppTheme.md),
                     

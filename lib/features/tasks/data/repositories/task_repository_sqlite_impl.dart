@@ -106,6 +106,44 @@ class TaskRepositorySQLiteImpl implements TaskRepository {
     return _tasksStreamController.stream;
   }
 
+  @override
+  Future<List<TaskModel>> searchTasks({
+    String? query,
+    String? status,
+    String? priority,
+    String? assignedTo,
+    DateTime? startDate,
+    DateTime? endDate,
+    List<String>? tags,
+    int limit = 50,
+    int offset = 0,
+  }) async {
+    return await _taskService.searchTasks(
+      query: query,
+      status: status,
+      priority: priority,
+      assignedTo: assignedTo,
+      startDate: startDate,
+      endDate: endDate,
+      tags: tags,
+      limit: limit,
+      offset: offset,
+    );
+  }
+
+  @override
+  Future<int> getTasksCount({
+    String? status,
+    String? priority,
+    String? assignedTo,
+  }) async {
+    return await _taskService.getTasksCount(
+      status: status,
+      priority: priority,
+      assignedTo: assignedTo,
+    );
+  }
+
   // Clean up resources
   void dispose() {
     _tasksStreamController.close();

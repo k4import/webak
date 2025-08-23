@@ -209,7 +209,7 @@ class TaskCubit extends Cubit<TaskState> {
       
       // Remove from search index and cache
       final taskToRemove = _tasks.firstWhere((t) => t.id == taskId, orElse: () => TaskModel.empty());
-      if (taskToRemove.id.isNotEmpty) {
+      if (taskToRemove.id?.isNotEmpty == true) {
         SearchManager.instance.removeTask(taskToRemove.toMap());
         TaskCacheManager.clearAll(); // Clear cache to maintain consistency
       }
